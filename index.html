@@ -1,0 +1,317 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>？？？？？？？？</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;700;900&family=ZCOOL+QingKe+HuangYou&display=swap');
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { min-height: 100vh; background: #0a0a0a; font-family: 'Noto Serif SC', serif; overflow-x: hidden; cursor: url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='32' height='32'><circle cx='16' cy='16' r='10' fill='%23ff00ff' opacity='0.5'/><text x='16' y='20' text-anchor='middle' font-size='14'>❓</text></svg>") 16 16, auto; }
+  .stars { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: 0; pointer-events: none; }
+  .star { position: absolute; width: 3px; height: 3px; background: white; border-radius: 50%; animation: twinkle var(--duration) ease-in-out infinite alternate; animation-delay: var(--delay); }
+  @keyframes twinkle { 0% { opacity: 0.1; transform: scale(0.5); } 50% { opacity: 1; transform: scale(1.5); box-shadow: 0 0 10px currentColor; } 100% { opacity: 0.1; transform: scale(0.5); } }
+  .floating-text { position: fixed; pointer-events: none; z-index: 1; font-family: 'ZCOOL QingKe HuangYou', cursive; color: rgba(255, 255, 255, 0.05); font-size: var(--size); animation: floatAround var(--speed) linear infinite; white-space: nowrap; user-select: none; }
+  @keyframes floatAround { 0% { transform: translate(0, 0) rotate(0deg); opacity: 0.05; } 25% { transform: translate(100px, -50px) rotate(90deg); opacity: 0.08; } 50% { transform: translate(50px, 100px) rotate(180deg); opacity: 0.03; } 75% { transform: translate(-80px, 30px) rotate(270deg); opacity: 0.07; } 100% { transform: translate(0, 0) rotate(360deg); opacity: 0.05; } }
+  .container { position: relative; z-index: 2; max-width: 800px; margin: 0 auto; padding: 40px 20px; min-height: 100vh; }
+  .header { text-align: center; padding: 60px 0 40px; position: relative; }
+  .header h1 { font-size: clamp(36px, 8vw, 72px); font-family: 'ZCOOL QingKe HuangYou', cursive; background: linear-gradient(135deg, #ff6b6b, #ffd93d, #6bcb77, #4d96ff, #ff6b6b); background-size: 300% 300%; -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; animation: gradientShift 3s ease infinite; letter-spacing: 8px; filter: drop-shadow(0 0 30px rgba(255, 107, 107, 0.3)); }
+  @keyframes gradientShift { 0% { background-position: 0% 50%; } 50% { background-position: 100% 50%; } 100% { background-position: 0% 50%; } }
+  .header .subtitle { font-size: 18px; color: rgba(255, 255, 255, 0.3); margin-top: 10px; animation: glitch 2s infinite; }
+  @keyframes glitch { 0%, 90%, 100% { transform: translate(0); opacity: 0.3; } 92% { transform: translate(-3px, 2px); opacity: 0.8; color: #ff6b6b; } 94% { transform: translate(3px, -2px); opacity: 0.8; color: #4d96ff; } 96% { transform: translate(-1px, 1px); opacity: 0.5; color: #6bcb77; } }
+  .counter-box { text-align: center; padding: 30px; margin: 30px 0; background: rgba(255, 255, 255, 0.03); border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 20px; backdrop-filter: blur(10px); position: relative; overflow: hidden; }
+  .counter-box::before { content: ''; position: absolute; top: -50%; left: -50%; width: 200%; height: 200%; background: conic-gradient(from var(--angle), transparent, rgba(255, 107, 107, 0.1), transparent, rgba(77, 150, 255, 0.1), transparent); animation: spin 4s linear infinite; }
+  @property --angle { syntax: '<angle>'; initial-value: 0deg; inherits: false; }
+  @keyframes spin { to { --angle: 360deg; } }
+  .counter-box > * { position: relative; z-index: 1; }
+  .counter-box .label { font-size: 14px; color: rgba(255, 255, 255, 0.4); margin-bottom: 10px; letter-spacing: 4px; }
+  .counter-box .number { font-size: 64px; font-weight: 900; font-family: 'ZCOOL QingKe HuangYou', cursive; background: linear-gradient(135deg, #ff6b6b, #ffd93d); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+  .counter-box .unit { font-size: 16px; color: rgba(255, 255, 255, 0.3); margin-top: 5px; }
+  .question-card { background: rgba(255, 255, 255, 0.02); border: 1px solid rgba(255, 255, 255, 0.08); border-radius: 16px; padding: 30px; margin: 20px 0; backdrop-filter: blur(5px); transition: all 0.3s ease; cursor: pointer; position: relative; overflow: hidden; }
+  .question-card:hover { transform: scale(1.02); border-color: rgba(255, 255, 255, 0.2); }
+  .question-card .q-marker { position: absolute; top: -10px; right: -10px; font-size: 80px; font-weight: 900; color: rgba(255, 255, 255, 0.03); font-family: 'ZCOOL QingKe HuangYou', cursive; line-height: 1; }
+  .question-card .q-text { font-size: 22px; color: rgba(255, 255, 255, 0.9); font-weight: 700; margin-bottom: 10px; position: relative; z-index: 1; }
+  .question-card .q-answer { font-size: 16px; color: rgba(255, 255, 255, 0.4); line-height: 1.8; max-height: 0; overflow: hidden; transition: max-height 0.5s ease, opacity 0.5s ease; opacity: 0; }
+  .question-card.open .q-answer { max-height: 500px; opacity: 1; }
+  .chaos-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; margin: 30px 0; }
+  .chaos-block { aspect-ratio: 1; border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 24px; cursor: pointer; transition: all 0.2s ease; user-select: none; animation: blockJiggle var(--jiggle) ease-in-out infinite alternate; }
+  @keyframes blockJiggle { 0% { transform: translate(0, 0) rotate(0deg) scale(1); } 100% { transform: translate(var(--x), var(--y)) rotate(var(--r)) scale(var(--s)); } }
+  .chaos-block:hover { transform: scale(1.5) !important; z-index: 10; box-shadow: 0 0 50px var(--glow); }
+  .time-display { text-align: center; padding: 20px; margin: 20px 0; font-family: 'ZCOOL QingKe HuangYou', cursive; font-size: 28px; color: rgba(255, 255, 255, 0.5); border: 1px dashed rgba(255, 255, 255, 0.15); border-radius: 12px; background: rgba(0, 0, 0, 0.3); }
+  .time-display .time-label { font-size: 12px; color: rgba(255, 255, 255, 0.2); letter-spacing: 3px; margin-bottom: 5px; }
+  .time-display .time-value { font-size: 36px; letter-spacing: 5px; }
+  .time-display .time-hint { font-size: 12px; color: rgba(255, 255, 255, 0.15); margin-top: 8px; }
+  .mystery-popup { position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%) scale(0); background: rgba(10, 10, 20, 0.95); border: 2px solid rgba(255, 255, 255, 0.15); border-radius: 24px; padding: 50px; z-index: 1000; backdrop-filter: blur(20px); text-align: center; transition: transform 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275), opacity 0.5s ease; opacity: 0; pointer-events: none; max-width: 90vw; }
+  .mystery-popup.show { transform: translate(-50%, -50%) scale(1); opacity: 1; pointer-events: all; }
+  .mystery-popup .popup-icon { font-size: 80px; margin-bottom: 20px; display: block; }
+  .mystery-popup .popup-text { font-size: 24px; color: white; font-family: 'ZCOOL QingKe HuangYou', cursive; margin-bottom: 15px; }
+  .mystery-popup .popup-sub { font-size: 16px; color: rgba(255, 255, 255, 0.4); margin-bottom: 25px; }
+  .mystery-popup .popup-btn { padding: 12px 40px; border: none; border-radius: 50px; background: linear-gradient(135deg, #ff6b6b, #4d96ff); color: white; font-size: 16px; cursor: pointer; font-family: 'Noto Serif SC', serif; transition: transform 0.3s ease; }
+  .mystery-popup .popup-btn:hover { transform: scale(1.1); }
+  .overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.6); z-index: 999; opacity: 0; pointer-events: none; transition: opacity 0.5s ease; }
+  .overlay.show { opacity: 1; pointer-events: all; }
+  .footer-weird { text-align: center; padding: 40px 0; color: rgba(255, 255, 255, 0.15); font-size: 12px; letter-spacing: 2px; }
+  .footer-weird::after { content: '📡 正在接收宇宙信号...'; display: block; margin-top: 10px; animation: signalPulse 2s ease-in-out infinite; font-size: 11px; }
+  @keyframes signalPulse { 0%, 100% { opacity: 0.2; } 50% { opacity: 0.8; } }
+  .trail { position: fixed; width: 20px; height: 20px; border-radius: 50%; pointer-events: none; z-index: 9999; transition: all 0.1s ease; mix-blend-mode: screen; }
+  .rainbow-btn { display: block; margin: 20px auto; padding: 16px 40px; border: none; border-radius: 50px; font-size: 20px; font-family: 'ZCOOL QingKe HuangYou', cursive; cursor: pointer; background: linear-gradient(135deg, #ff6b6b, #ffd93d, #6bcb77, #4d96ff, #a855f7, #ff6b6b); background-size: 300% 300%; animation: gradientShift 2s ease infinite; color: white; transition: transform 0.3s ease, box-shadow 0.3s ease; box-shadow: 0 0 30px rgba(255, 107, 107, 0.3); }
+  .rainbow-btn:hover { transform: scale(1.1); box-shadow: 0 0 60px rgba(255, 107, 107, 0.5); }
+  .rainbow-btn:active { transform: scale(0.95); }
+  .scroll-hint { text-align: center; padding: 10px; color: rgba(255, 255, 255, 0.1); font-size: 13px; animation: bob 2s ease-in-out infinite; }
+  @keyframes bob { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-10px); } }
+  @media (max-width: 600px) { .chaos-grid { grid-template-columns: repeat(3, 1fr); } .question-card .q-text { font-size: 18px; } .counter-box .number { font-size: 42px; } }
+</style>
+</head>
+<body>
+<div class="stars" id="stars"></div>
+<div id="floatingContainer"></div>
+<div id="trailContainer"></div>
+<div class="overlay" id="overlay"></div>
+<div class="mystery-popup" id="mysteryPopup">
+  <span class="popup-icon" id="popupIcon">👻</span>
+  <div class="popup-text" id="popupText">你发现我了！</div>
+  <div class="popup-sub" id="popupSub">但我其实一直都在看着你</div>
+  <button class="popup-btn" onclick="closePopup()">关掉我（但没用）</button>
+</div>
+<div class="container">
+  <div class="header">
+    <h1>？莫名其妙！</h1>
+    <div class="subtitle">—— 一个什么都有可能发生的网页 ——</div>
+  </div>
+  <div class="counter-box">
+    <div class="label">✦ 你在这个页面上浪费的时间 ✦</div>
+    <div class="number" id="wastedTime">0</div>
+    <div class="unit">秒的人生已一去不复返</div>
+  </div>
+  <button class="rainbow-btn" onclick="doRandomThing()">🔮 点我发生莫名其妙的事</button>
+  <div class="time-display">
+    <div class="time-label">⌛ 宇宙时间</div>
+    <div class="time-value" id="weirdTime">--:--:--</div>
+    <div class="time-hint">以上时间可能与实际情况完全不符</div>
+  </div>
+  <h2 style="text-align:center;color:rgba(255,255,255,0.2);font-size:14px;letter-spacing:4px;margin:40px 0 10px;font-weight:400;">📜 点击查看人生终极问题（大概）</h2>
+  <div class="question-card" onclick="toggleQuestion(this)">
+    <div class="q-marker">?</div>
+    <div class="q-text">为什么方便面是弯的而不是直的？</div>
+    <div class="q-answer">因为弯的方便面在加工过程中更容易通过油炸环节，而且弯曲的结构能让面饼更紧凑、不容易碎。当然，也有一种说法是——因为直的方便面看起来太正经了，不配叫"方便面"。</div>
+  </div>
+  <div class="question-card" onclick="toggleQuestion(this)">
+    <div class="q-marker">?</div>
+    <div class="q-text">为什么按下停止加载按钮后页面还在加载？</div>
+    <div class="q-answer">这是一个关于信任的问题。你按下了停止，但浏览器觉得你可能改变了主意。就像你说了分手但又希望对方挽留一样——互联网也是有感情的。</div>
+  </div>
+  <div class="question-card" onclick="toggleQuestion(this)">
+    <div class="q-marker">?</div>
+    <div class="q-text">如果我现在关掉这个页面，这个页面还会存在吗？</div>
+    <div class="q-answer">从物理上讲，它还在服务器上。但从哲学上讲——如果一棵树在森林里倒下，而没有人听见……更重要的是，你真的关掉了吗？还是说，你其实一直都在这里，从未离开？<br><br><span style="color:rgba(255,255,255,0.2);font-size:12px;">（温馨提示：想太多容易掉头发）</span></div>
+  </div>
+  <div class="question-card" onclick="toggleQuestion(this)">
+    <div class="q-marker">?</div>
+    <div class="q-text">我为什么要打开这个网页？</div>
+    <div class="q-answer">这个问题可能只有你自己知道。也许是因为好奇，也许是因为无聊，也许是因为你在逃避某些更重要的事情……<br><br>不管怎样，欢迎来到这个宇宙中最没用的网页之一。你在这里度过的每一秒，都是你生命中永远不会回来的一秒。<br><br><span style="color:rgba(255,255,255,0.2);font-size:12px;">（换句话说：你本来可以用这些时间去做更有意义的事）</span></div>
+  </div>
+  <div class="question-card" onclick="toggleQuestion(this)">
+    <div class="q-marker">?</div>
+    <div class="q-text">你确定你现在不是在做梦吗？</div>
+    <div class="q-answer">梦里的人通常不会意识到自己在做梦。但你有没有注意到，你刚才读到这句话的时候，周围的环境突然安静了一下？<br><br>试试掐自己一下。如果会痛……那也可能只是梦里的痛觉。<br><br>🌀 你往下翻了，对吧？那就说明——至少你的手指是真实的（大概）。</div>
+  </div>
+  <h2 style="text-align:center;color:rgba(255,255,255,0.2);font-size:14px;letter-spacing:4px;margin:40px 0 10px;font-weight:400;">🎲 点击方块会发生奇怪的事</h2>
+  <div class="chaos-grid" id="chaosGrid"></div>
+  <div class="scroll-hint">↓ 下面还有什么？我也不知道 ↓</div>
+  <div style="margin: 30px 0; text-align: center;">
+    <div style="display:inline-block;padding:20px 40px;border:1px solid rgba(255,255,255,0.05);border-radius:16px;background:rgba(0,0,0,0.3);">
+      <p style="color:rgba(255,255,255,0.1);font-size:12px;letter-spacing:2px;margin-bottom:8px;">🎴 今日运势</p>
+      <p style="color:rgba(255,255,255,0.3);font-size:18px;" id="fortune">正在从宇宙深处获取您的运势信息…</p>
+    </div>
+  </div>
+  <div style="text-align:center;padding:30px;">
+    <p style="color:rgba(255,255,255,0.08);font-size:10px;letter-spacing:4px;">本页面已通过 ISO 9001-莫名其妙 认证</p>
+    <p style="color:rgba(255,255,255,0.05);font-size:10px;letter-spacing:2px;margin-top:5px;">版本号：v3.14.15.9.26.5.3.5.8.9.7.9.3.2.3.8（没错，就是圆周率）</p>
+  </div>
+  <div class="footer-weird">该页面没有任何实际用途</div>
+</div>
+<script>
+  const starsContainer = document.getElementById('stars');
+  const starColors = ['#fff', '#ffd93d', '#4d96ff', '#ff6b6b', '#a855f7', '#6bcb77'];
+  for (let i = 0; i < 200; i++) {
+    const star = document.createElement('div');
+    star.className = 'star';
+    star.style.left = Math.random() * 100 + '%';
+    star.style.top = Math.random() * 100 + '%';
+    star.style.setProperty('--duration', (2 + Math.random() * 4) + 's');
+    star.style.setProperty('--delay', Math.random() * 5 + 's');
+    star.style.color = starColors[Math.floor(Math.random() * starColors.length)];
+    star.style.width = star.style.height = (1 + Math.random() * 3) + 'px';
+    starsContainer.appendChild(star);
+  }
+  const floatingContainer = document.getElementById('floatingContainer');
+  const floatingWords = ['?', '！', '¿', '¡', '？', '为什么', '什么', '？', '！', '¿', '？？', '！！！', 'wtf', '？？？', '?!', '宇宙', '人生', '哲学', '????', '……'];
+  for (let i = 0; i < 30; i++) {
+    const el = document.createElement('div');
+    el.className = 'floating-text';
+    el.textContent = floatingWords[Math.floor(Math.random() * floatingWords.length)];
+    el.style.left = Math.random() * 100 + '%';
+    el.style.top = Math.random() * 100 + '%';
+    el.style.setProperty('--size', (14 + Math.random() * 40) + 'px');
+    el.style.setProperty('--speed', (10 + Math.random() * 30) + 's');
+    el.style.animationDelay = Math.random() * 20 + 's';
+    floatingContainer.appendChild(el);
+  }
+  const trailContainer = document.getElementById('trailContainer');
+  const trailColors = ['#ff6b6b', '#ffd93d', '#6bcb77', '#4d96ff', '#a855f7', '#ff9ff3'];
+  document.addEventListener('mousemove', (e) => {
+    const trail = document.createElement('div');
+    trail.className = 'trail';
+    const size = 5 + Math.random() * 20;
+    trail.style.width = trail.style.height = size + 'px';
+    trail.style.left = (e.clientX - size / 2) + 'px';
+    trail.style.top = (e.clientY - size / 2) + 'px';
+    trail.style.background = trailColors[Math.floor(Math.random() * trailColors.length)];
+    trail.style.opacity = 0.3 + Math.random() * 0.4;
+    trail.style.borderRadius = Math.random() > 0.5 ? '50%' : '4px';
+    trail.style.transform = `rotate(${Math.random() * 360}deg)`;
+    trailContainer.appendChild(trail);
+    setTimeout(() => trail.remove(), 800 + Math.random() * 400);
+  });
+  let seconds = 0;
+  setInterval(() => { seconds++; document.getElementById('wastedTime').textContent = seconds; }, 1000);
+  function updateWeirdTime() {
+    const d = new Date();
+    const h = String(d.getHours() + Math.floor(Math.random() * 5)).padStart(2, '0');
+    const m = String(d.getMinutes() + Math.floor(Math.random() * 60)).padStart(2, '0');
+    const s = String(d.getSeconds() + Math.floor(Math.random() * 60)).padStart(2, '0');
+    document.getElementById('weirdTime').textContent = `${h}:${m}:${s}`;
+  }
+  setInterval(updateWeirdTime, 1500);
+  updateWeirdTime();
+  function toggleQuestion(el) { el.classList.toggle('open'); }
+  const chaosGrid = document.getElementById('chaosGrid');
+  const emojis = ['🤔', '❓', '❕', '⁉', '🌀', '👻', '💀', '🎭', '🫠', '😵‍💫', '🤪', '🕳️', '⚡', '🌚', '🍌', '🧦', '🫧', '🎪', '🃏', '💫', '🪄', '🔮', '🎲', '♾️'];
+  const blockColors = ['#ff6b6b33', '#ffd93d33', '#6bcb7733', '#4d96ff33', '#a855f733', '#ff9ff333'];
+  function createBlocks() {
+    chaosGrid.innerHTML = '';
+    for (let i = 0; i < 12; i++) {
+      const block = document.createElement('div');
+      block.className = 'chaos-block';
+      block.textContent = emojis[Math.floor(Math.random() * emojis.length)];
+      const bg = blockColors[Math.floor(Math.random() * blockColors.length)];
+      block.style.background = bg;
+      block.style.setProperty('--jiggle', (0.2 + Math.random() * 0.8).toFixed(2) + 's');
+      block.style.setProperty('--x', (-5 + Math.random() * 10) + 'px');
+      block.style.setProperty('--y', (-5 + Math.random() * 10) + 'px');
+      block.style.setProperty('--r', (-10 + Math.random() * 20) + 'deg');
+      block.style.setProperty('--s', (0.8 + Math.random() * 0.4).toFixed(2));
+      block.style.setProperty('--glow', bg);
+      block.onclick = () => {
+        block.textContent = emojis[Math.floor(Math.random() * emojis.length)];
+        block.style.transform = 'scale(1.5) rotate(360deg)';
+        block.style.transition = 'transform 0.5s ease';
+        setTimeout(() => { block.style.transform = ''; block.style.transition = ''; }, 500);
+        showMiniPopup(block.textContent + '！');
+      };
+      chaosGrid.appendChild(block);
+    }
+  }
+  createBlocks();
+  function showMiniPopup(text) {
+    const popup = document.getElementById('mysteryPopup');
+    const icon = document.getElementById('popupIcon');
+    const title = document.getElementById('popupText');
+    const sub = document.getElementById('popupSub');
+    const overlay = document.getElementById('overlay');
+    const randomIcons = ['👻', '🦑', '🧙', '🫧', '🌀', '💫', '🪄', '🔮', '🎃', '👽', '🤖', '🦄', '🐉', '🍄', '🧬'];
+    icon.textContent = randomIcons[Math.floor(Math.random() * randomIcons.length)];
+    title.textContent = text || randomMessages[Math.floor(Math.random() * randomMessages.length)];
+    sub.textContent = randomSubs[Math.floor(Math.random() * randomSubs.length)];
+    overlay.classList.add('show');
+    popup.classList.add('show');
+  }
+  const randomMessages = ['你点击了不该点击的东西！', '恭喜你浪费了 0.5 秒！', '宇宙正在重新校准……', '你触发了隐藏事件 #42', '这个按钮其实什么都没做', '你的好奇心值得一枚勋章 🏅', '警告：过度点击会导致页面更莫名其妙', '其实你是在点击你自己', '你以为有惊喜？其实没有。', '🎉 你赢了……赢了什么？我也不知道', '这是一个没有意义的消息', '你的屏幕刚刚闪了一下（并没有）', '检测到无聊指数过高', '你已经被添加到有趣的人名单中', '404 — 意义未找到'];
+  const randomSubs = ['但我其实一直都在看着你', '你可能需要重新考虑一下你的人生选择', '你真的以为会有什么重要的事情发生吗？', '这句话是随机生成的，没有任何含义', '如果你读到了这里，说明你的注意力很集中', '这个弹窗的成本约为 0.0001 元', '该弹窗已通过环保认证', '温馨提示：多喝热水', '至少在关掉之前，你还在阅读这个页面', '你的耐心值得称赞', '这个子标题也没有任何实际意义'];
+  function closePopup() {
+    const popup = document.getElementById('mysteryPopup');
+    const overlay = document.getElementById('overlay');
+    if (Math.random() < 0.3) {
+      const icon = document.getElementById('popupIcon');
+      const text = document.getElementById('popupText');
+      const sub = document.getElementById('popupSub');
+      icon.textContent = '😈';
+      text.textContent = '你关不掉我！';
+      sub.textContent = '因为我选择不消失 😎';
+      setTimeout(() => {
+        if (popup.classList.contains('show')) {
+          icon.textContent = '👻';
+          text.textContent = randomMessages[Math.floor(Math.random() * randomMessages.length)];
+          sub.textContent = randomSubs[Math.floor(Math.random() * randomSubs.length)];
+        }
+      }, 3000);
+      return;
+    }
+    overlay.classList.remove('show');
+    popup.classList.remove('show');
+  }
+  function doRandomThing() {
+    const actions = [
+      () => showMiniPopup(),
+      () => { document.querySelectorAll('.question-card').forEach(c => c.classList.toggle('open')); },
+      () => {
+        const fortune = document.getElementById('fortune');
+        const fates = ['大吉 — 你今天会遇到一件莫名其妙的好事', '中吉 — 宇宙在暗示你该关掉这个页面了', '小吉 — 你将在 30 分钟内忘记看过这个页面', '吉 — 你的未来充满问号', '凶 — 你刚刚被一只虚拟的猫踩了一下', '大凶 — 你将永远无法解释你为什么打开了这个页面', '末吉 — 你的人生就像这个网页一样充满不确定性', '超凶 — 🐱 凶！这只猫真的很凶！', '？？？ — 系统无法预测，因为您过于神秘'];
+        fortune.textContent = fates[Math.floor(Math.random() * fates.length)];
+        fortune.style.color = `hsl(${Math.random() * 360}, 80%, 60%)`;
+      },
+      () => {
+        const blocks = document.querySelectorAll('.chaos-block');
+        blocks.forEach((b, i) => {
+          setTimeout(() => {
+            b.textContent = emojis[Math.floor(Math.random() * emojis.length)];
+            b.style.background = blockColors[Math.floor(Math.random() * blockColors.length)];
+            b.style.transform = 'scale(1.5) rotate(360deg)';
+            setTimeout(() => { b.style.transform = ''; }, 500);
+          }, i * 80);
+        });
+      },
+      () => {
+        document.body.style.background = `hsl(${Math.random() * 360}, 50%, 5%)`;
+        document.querySelector('.rainbow-btn').textContent = ['🔮 再点一次！', '🌀 停不下来了', '✨ 有点上瘾', '🎪 这有什么意义？', '💫 我也不知道为什么'][Math.floor(Math.random() * 5)];
+      },
+      () => { alert('👻 略略略！你以为随便点一下就会发生什么吗？那你真是想对了！但我就是不告诉你！'); },
+      () => {
+        const h1 = document.querySelector('.header h1');
+        h1.textContent = ['！？莫名其妙', '？？？？？？？', '¿Qué?', 'What?', 'なぜ？', '？？？', '！', '......'][Math.floor(Math.random() * 8)];
+      },
+      () => { document.querySelectorAll('.q-answer').forEach(a => { a.textContent = '对不起，该答案已被宇宙回收。请稍后再试。🌌'; }); },
+    ];
+    const count = 1 + Math.floor(Math.random() * 3);
+    for (let i = 0; i < count; i++) { setTimeout(() => { actions[Math.floor(Math.random() * actions.length)](); }, i * 200); }
+  }
+  setInterval(() => {
+    if (Math.random() < 0.3) {
+      const subtleActions = [
+        () => { const blocks = document.querySelectorAll('.chaos-block'); const b = blocks[Math.floor(Math.random() * blocks.length)]; if (b) { b.textContent = emojis[Math.floor(Math.random() * emojis.length)]; b.style.background = blockColors[Math.floor(Math.random() * blockColors.length)]; } },
+        () => { document.getElementById('fortune').textContent = ['正在重新连接宇宙...', '信号不稳定...', '🛸 接收到不明信号', '运势正在加载...'][Math.floor(Math.random() * 4)]; },
+        () => { document.getElementById('popupIcon').textContent = '👀'; setTimeout(() => { document.getElementById('popupIcon').textContent = '👻'; }, 1000); },
+        () => { document.querySelector('.subtitle').style.opacity = '0'; setTimeout(() => { document.querySelector('.subtitle').style.opacity = '0.3'; }, 200); },
+      ];
+      subtleActions[Math.floor(Math.random() * subtleActions.length)]();
+    }
+  }, 5000);
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape' && document.getElementById('mysteryPopup').classList.contains('show')) {
+      Math.random() < 0.5 ? closePopup() : showMiniPopup('👀 ESC 键已被劫持');
+    }
+  });
+  document.addEventListener('visibilitychange', () => {
+    if (document.hidden) { document.title = ['别走！', '你去哪？', '回来！', '😢', '我等你', '……'][Math.floor(Math.random() * 6)]; }
+    else { document.title = '？？？？？？？？'; if (Math.random() < 0.4) setTimeout(doRandomThing, 500); }
+  });
+  setTimeout(() => {
+    document.getElementById('fortune').textContent = ['大凶 — 你今天会忘记一件重要的事，但没关系，因为人生就是不断遗忘的过程。', '小吉 — 你将在未来 24 小时内遇到一个让你笑出来的瞬间。', '中平 — 🫠 不好不坏，就像这个网页一样平庸。', '大吉 — 宇宙为你点赞！虽然你可能不知道赞在哪里。', '凶 — 你即将被哲学问题困扰：我是谁？我为什么在看运势？', '吉 — 你刚刚做了一个正确的决定（打开这个页面不算）。'][Math.floor(Math.random() * 6)];
+  }, 2000);
+  console.log('%c👻 嘿！你在看控制台？', 'font-size:24px; color:#ff6b6b;');
+  console.log('%c你以为这里会有什么秘密信息吗？其实没有。', 'font-size:14px; color:rgba(255,255,255,0.3);');
+  console.log('%c不过你确实很有探索精神，值得表扬 👍', 'font-size:14px; color:rgba(255,255,255,0.3);');
+  console.log('%c但说实话，你真的没有更好的事情可以做吗？😅', 'font-size:14px; color:rgba(255,255,255,0.3);');
+</script>
+</body>
+</html>
